@@ -5,15 +5,92 @@
     <title>Natty</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script id="insert"></script>
+
+    <script src="/js/stringify.js?c967a9b82819adcc41bc5ca208a7fdfa79e4a8fb" charset="utf-8"></script>
+    <script>
+      const customConsole = (w) => {
+        const pushToConsole = (payload, type) => {
+          w.parent.postMessage({
+            console: {
+              payload: stringify(payload),
+              type:    type
+            }
+          }, "*")
+        }
+
+        w.onerror = (message, url, line, column) => {
+          // the line needs to correspond with the editor panel
+          // unfortunately this number needs to be altered every time this view is changed
+          line = line - 70
+          if (line < 0){
+            pushToConsole(message, "error")
+          } else {
+            pushToConsole(`[${line}:${column}] ${message}`, "error")
+          }
+        }
+
+        let console = (function(systemConsole){
+          return {
+            log: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "log")
+              systemConsole.log.apply(this, args)
+            },
+            info: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "info")
+              systemConsole.info.apply(this, args)
+            },
+            warn: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "warn")
+              systemConsole.warn.apply(this, args)
+            },
+            error: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "error")
+              systemConsole.error.apply(this, args)
+            },
+            system: function(arg){
+              pushToConsole(arg, "system")
+            },
+            clear: function(){
+              systemConsole.clear.apply(this, {})
+            },
+            time: function(){
+              let args = Array.from(arguments)
+              systemConsole.time.apply(this, args)
+            },
+            assert: function(assertion, label){
+              if (!assertion){
+                pushToConsole(label, "log")
+              }
+
+              let args = Array.from(arguments)
+              systemConsole.assert.apply(this, args)
+            }
+          }
+        }(window.console))
+
+        window.console = { ...window.console, ...console }
+
+        console.system("Running fiddle")
+      }
+
+      if (window.parent){
+        customConsole(window)
+      }
+    </script>
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid"></div>
     <header>
         <!--NavBar-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">
-                <img src="https://i.ibb.co/KhJLp5b/Coding-Project-Natty-Inc-2.png" width="6770px" alt="Logo">
+                <img src="https://i.postimg.cc/t407Vbjj/Coding-Project-Natty-Inc-2.png" width="6770px" alt="Logo">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,10 +99,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
+                        <a class="nav-link" href="about.html">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Results</a>
@@ -61,15 +138,15 @@
     <section>
         <!--About Us-->
             <section class="about-us">
-                <div class="about container-fluid">
-                  <img src="https://i.ibb.co/KhJLp5b/Coding-Project-Natty-Inc-2.png" class="pic">
+                
+                  <img src="https://i.postimg.cc/t407Vbjj/Coding-Project-Natty-Inc-2.png" class="pic">
                   <div class="text container-fluid">
                     <h2>About Us</h2>
                     <h5>Natty Inc.</h5>
                       <p>Natty Inc. is a researched based company founded in 2023 by three geniuses. The names of these geniuses are Santiago, Victor, and Omar. Natty Inc. wants to change the world through science and innovation. Natty Inc. came up to the solution of one of the world’s problems. We at Natty Inc. have designed an antidote. We present to the world, Droids.
                         Droids is the solution to the problem of people who are just too good. Are you tired of destroying competition? Are you bored of just being too amazingly athletic? Maybe you regret some past choices; whatever the reason is we have the solution. Our product will make you decrease in muscle mass, and so much more!</p>
                   </div>
-                </div>
+                
               </section>
         
     </section>
@@ -146,7 +223,7 @@
             <div  class="container">
                 <section class="about-us">
                     <div class="about">
-                        <iframe src="https://app.3dviewermax.com/d5e90f8a-2fc8-4b03-ac41-8a588ca280ae"  height="400" width="400" title="Syringe Model"></iframe> 
+                        <iframe src="https://app.3dviewermax.com/d5e90f8a-2fc8-4b03-ac41-8a588ca280ae"  height="600" width="800" title="Syringe Model"></iframe> 
                       <div class="text">
                         <h2>Syringe Model</h2>
                         <h5>-Syringes contain 2500 mg. of droidxyclaphl</h5>
@@ -155,6 +232,7 @@
                     </div>
                   </section>
             </div>
+
 
             
             
